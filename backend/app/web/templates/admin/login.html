@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}تسجيل الدخول | دجاج وتوم{% endblock %}
+
+{% block body %}
+<div class="min-h-screen flex items-center justify-center p-6"
+     style="background: linear-gradient(135deg, #E10600 0%, #B80500 100%);">
+
+  <div class="w-full max-w-md">
+    <!-- البطاقة -->
+    <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
+
+      <!-- هيدر البطاقة -->
+      <div class="p-8 text-center bg-brand-red text-white">
+        <div class="inline-block bg-white rounded-2xl p-3 mb-4 shadow-lg">
+          <img src="/static/img/logo.png" alt="logo" class="h-16 w-16 object-contain"
+               onerror="this.outerHTML='<span class=&quot;text-4xl&quot;>🐔</span>'">
+        </div>
+        <h1 class="text-2xl font-black">دجاج وتوم</h1>
+        <p class="text-brand-yellow font-bold text-sm mt-1">لوحة التحكم</p>
+      </div>
+
+      <!-- النموذج -->
+      <form method="POST" action="/admin/login" class="p-8 space-y-5">
+
+        {% if error %}
+          <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm font-bold flex items-center gap-2">
+            <svg class="w-5 h-5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            {{ error }}
+          </div>
+        {% endif %}
+
+        <div>
+          <label class="block text-sm font-bold text-brand-black mb-2">اسم المستخدم</label>
+          <input type="text" name="username" required autofocus
+                 class="w-full px-4 py-3 border-2 border-brand-border rounded-xl
+                        focus:border-brand-red focus:outline-none focus:ring-4 focus:ring-brand-red/10
+                        transition-all text-brand-black"
+                 placeholder="admin">
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-brand-black mb-2">كلمة السر</label>
+          <input type="password" name="password" required
+                 class="w-full px-4 py-3 border-2 border-brand-border rounded-xl
+                        focus:border-brand-red focus:outline-none focus:ring-4 focus:ring-brand-red/10
+                        transition-all text-brand-black"
+                 placeholder="••••••••">
+        </div>
+
+        <button type="submit"
+                class="w-full bg-brand-red text-white font-black py-3.5 rounded-xl
+                       hover:bg-brand-darkRed active:scale-[0.98] transition-all
+                       shadow-lg shadow-brand-red/30">
+          تسجيل الدخول
+        </button>
+
+      </form>
+    </div>
+
+    <!-- ملاحظة سفلية -->
+    <p class="text-center text-white/80 text-xs mt-6">
+      لوحة تحكم خاصة بموظفي المطعم فقط
+    </p>
+  </div>
+</div>
+{% endblock %}

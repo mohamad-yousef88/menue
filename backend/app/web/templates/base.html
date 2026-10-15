@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}دجاج وتوم{% endblock %}</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          brand: {
+            red: '#E10600',       // الأحمر الرسمي
+            darkRed: '#B80500',   // أحمر داكن للـ hover
+            yellow: '#FFD600',    // الأصفر الرسمي
+            black: '#1A1A1A',     // الأسود الرسمي
+            bg: '#F7F7F5',        // خلفية فاتحة
+            grey: '#777777',
+            border: '#E9E9E9',
+          }
+        },
+        fontFamily: {
+          sans: ['Cairo', 'system-ui', 'sans-serif'],
+        },
+      }
+    }
+  }
+</script>
+  <!-- خط Cairo من Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- HTMX -->
+  <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+
+  <!-- Alpine.js -->
+  <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <style>
+    * { font-family: 'Cairo', sans-serif; }
+    body { background-color: #F7F7F5; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #F7F7F5; }
+    ::-webkit-scrollbar-thumb { background: #E9E9E9; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #777; }
+  </style>
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen">
+
+  {% block body %}{% endblock %}
+
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

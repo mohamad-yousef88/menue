@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+{% block title %}{{ 'تعديل عنصر' if item else 'عنصر جديد' }} | دجاج وتوم{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-brand-bg">
+
+  <div class="bg-white border-b border-brand-border">
+    <div class="max-w-3xl mx-auto px-6 py-5 flex items-center gap-3">
+      <a href="/admin/menus/{{ menu.id }}/items" class="text-brand-grey hover:text-brand-red">← رجوع</a>
+      <h1 class="text-2xl font-black text-brand-black">
+        {{ 'تعديل عنصر' if item else 'عنصر جديد' }}
+      </h1>
+    </div>
+  </div>
+
+  <div class="max-w-3xl mx-auto p-6">
+    <form method="POST" action="/admin/menus/{{ menu.id }}/items/save"
+          enctype="multipart/form-data"
+          class="bg-white rounded-2xl border border-brand-border p-8 space-y-6">
+
+      {% if item %}
+        <input type="hidden" name="item_id" value="{{ item.id }}">
+      {% endif %}
+
+      <!-- الصورة -->
+      <div>
+        <label class="block text-sm font-bold text-brand-black mb-2">صورة العنصر</label>
+        <div class="flex items-center gap-4">
+          <div id="preview" class="w-24 h-24 rounded-2xl bg-brand-bg border-2 border-dashed border-brand-border flex items-center justify-center overflow-hidden">
+            {% if item and item.image_url %}
+              <img src="{{ item.image_url }}" class="w-full h-full object-cover">
+            {% else %}
+              <span class="text-3xl text-brand-grey">📷</span>
+            {% endif %}
+          </div>
+          <div class="flex-1">
+            <input type="file" name="image" accept="image/*" id="imageInput"
+                   class="w-full text-sm file:mr-3 file:py-2.5 file:px-5 file:rounded-xl
+                          file:border-0 file:bg-brand-red file:text-white file:font-bold
+                          file:cursor-pointer hover:file:bg-brand-darkRed border-2 border-brand-border rounded-xl p-1">
+            <p class="text-xs text-brand-grey mt-2">JPG, PNG — حتى 5MB</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div class="col-span-2">
+          <label class="block text-sm font-bold text-brand-black mb-2">اسم العنصر *</label>
+          <input type="text" name="name" required value="{{ item.name if item else '' }}"
+                 class="w-full px-4 py-3 border-2 border-brand-border rounded-xl
+                        focus:border-brand-red focus:outline-none focus:ring-4 focus:ring-brand-red/10">
+        </div>
+
+        <div class="col-span-2">
+          <label class="block text-sm font-bold text-brand-black mb-2">الوصف</label>
+          <textarea name="description" rows="2"
+                    class="w-full px-4 py-3 border-2 border-brand-border rounded-xl
+                           focus:border-brand-red focus:outline-none focus:ring-4 focus:ring-brand-red/10 resize-none">{{ item.description if item else '' }}</textarea>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-brand-black mb-2">السعر (ل.س) *</label>
+          <input type="number" name="price" required min="0" value="{{ item.price if item else '' }}"
+                 class="w-full px-4 py-3 border-2 border-brand-border rounded-xl
+                        focus:border-brand-red focus:outline-none focus:ring-4 focus:ring-brand-red/10">
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-brand-black mb-2">الفئة *</label>
+          <input type="text" name="category" required list="categories"
+                 value="{{ item.category if item else '' }}"
+                 class="w-full px-4 py-3 border-2 border-brand-border rounded-xl
+                        focus:border-brand-red focus:outline-none focus:ring-4 focus:ring-brand-red/10">
+          <datalist id="categories">
+            <option value="سندويش"><option value="فروج"><option value="وجبات">
+            <option value="صوصات"><option value="مشروبات">
+          </datalist>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-brand-black mb-2">ترتيب العرض</label>
+          <input type="number" name="sort_order" value="{{ item.sort_order if item else 0 }}"
+                 class="w-full px-4 py-3 border-2 border-brand-border rounded-xl
+                        focus:border-brand-red focus:outline-none focus:ring-4 focus:ring-brand-red/10">
+        </div>
+
+        <div class="flex items-center gap-6">
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="is_available" value="true"
+                   {% if not item or item.is_available %}checked{% endif %}
+                   class="w-5 h-5 accent-brand-red">
+            <span class="font-bold text-sm">متوفر</span>
+          </label>
+          <label class="flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" name="is_featured" value="true"
+                   {% if item and item.is_featured %}checked{% endif %}
+                   class="w-5 h-5 accent-brand-red">
+            <span class="font-bold text-sm">مميز ★</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-4 border-t border-brand-border">
+        <button type="submit"
+                class="flex-1 bg-brand-red text-white font-black py-3.5 rounded-xl
+                       hover:bg-brand-darkRed transition-all shadow-lg shadow-brand-red/20">
+          {{ 'حفظ التعديلات' if item else 'إضافة العنصر' }}
+        </button>
+        <a href="/admin/menus/{{ menu.id }}/items"
+           class="px-6 py-3.5 bg-brand-bg text-brand-black font-bold rounded-xl hover:bg-brand-border transition-all">
+          إلغاء
+        </a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+<script>
+  // معاينة الصورة عند الاختيار
+  document.getElementById('imageInput').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        document.getElementById('preview').innerHTML =
+          `<img src="${ev.target.result}" class="w-full h-full object-cover">`;
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
+{% endblock %}

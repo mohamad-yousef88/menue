@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}{{ 'تعديل منيو' if menu else 'منيو جديد' }} | دجاج وتوم{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-brand-bg">
+
+  <div class="bg-white border-b border-brand-border">
+    <div class="max-w-3xl mx-auto px-6 py-5 flex items-center gap-3">
+      <a href="/admin/menus" class="text-brand-grey hover:text-brand-red">← رجوع</a>
+      <h1 class="text-2xl font-black text-brand-black">
+        {{ 'تعديل منيو' if menu else 'منيو جديد' }}
+      </h1>
+    </div>
+  </div>
+
+  <div class="max-w-3xl mx-auto p-6">
+    <form method="POST" action="/admin/menus/save" class="bg-white rounded-2xl border border-brand-border p-8 space-y-6">
+
+      {% if menu %}
+        <input type="hidden" name="menu_id" value="{{ menu.id }}">
+      {% endif %}
+
+      <div>
+        <label class="block text-sm font-bold text-brand-black mb-2">اسم المنيو *</label>
+        <input type="text" name="name" required value="{{ menu.name if menu else '' }}"
+               class="w-full px-4 py-3 border-2 border-brand-border rounded-xl
+                      focus:border-brand-red focus:outline-none focus:ring-4 focus:ring-brand-red/10">
+      </div>
+
+      <div>
+        <label class="block text-sm font-bold text-brand-black mb-2">الوصف</label>
+        <textarea name="description" rows="3"
+                  class="w-full px-4 py-3 border-2 border-brand-border rounded-xl
+                         focus:border-brand-red focus:outline-none focus:ring-4 focus:ring-brand-red/10 resize-none">{{ menu.description if menu else '' }}</textarea>
+      </div>
+
+      <div class="flex gap-6">
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" name="is_default" value="true"
+                 {% if menu and menu.is_default %}checked{% endif %}
+                 class="w-5 h-5 rounded accent-brand-red">
+          <span class="font-bold text-brand-black">منيو افتراضي</span>
+        </label>
+
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" name="is_active" value="true"
+                 {% if not menu or menu.is_active %}checked{% endif %}
+                 class="w-5 h-5 rounded accent-brand-red">
+          <span class="font-bold text-brand-black">نشط</span>
+        </label>
+      </div>
+
+      <div class="flex gap-3 pt-4 border-t border-brand-border">
+        <button type="submit"
+                class="flex-1 bg-brand-red text-white font-black py-3.5 rounded-xl
+                       hover:bg-brand-darkRed transition-all shadow-lg shadow-brand-red/20">
+          {{ 'حفظ التعديلات' if menu else 'إنشاء المنيو' }}
+        </button>
+        <a href="/admin/menus"
+           class="px-6 py-3.5 bg-brand-bg text-brand-black font-bold rounded-xl hover:bg-brand-border transition-all">
+          إلغاء
+        </a>
+      </div>
+
+    </form>
+  </div>
+</div>
+{% endblock %}

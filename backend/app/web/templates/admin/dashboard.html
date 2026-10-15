@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+{% block title %}لوحة التحكم | دجاج وتوم{% endblock %}
+
+{% block body %}
+<div class="min-h-screen flex">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-brand-black text-white flex-shrink-0 hidden md:flex flex-col">
+    <div class="p-6 border-b border-white/10">
+      <div class="flex items-center gap-3">
+        <div class="bg-white rounded-xl p-2">
+          <img src="/static/img/logo.png" class="h-8 w-8 object-contain"
+               onerror="this.outerHTML='<span class=&quot;text-xl&quot;>🐔</span>'">
+        </div>
+        <div>
+          <div class="font-black">دجاج وتوم</div>
+          <div class="text-xs text-brand-yellow">Fast Food</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="flex-1 p-4 space-y-1">
+      <a href="/admin" class="flex items-center gap-3 px-4 py-3 rounded-xl bg-brand-red font-bold">
+        <span>📊</span> لوحة التحكم
+      </a>
+      <a href="/admin/menus" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all">
+        <span>📋</span> المنيوهات
+      </a>
+      <a href="/admin/qr" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all">
+        <span>🔳</span> رمز QR
+      </a>
+      <a href="/menu" target="_blank" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/10 transition-all">
+        <span>👁️</span> عرض المنيو
+      </a>
+    </nav>
+
+    <div class="p-4 border-t border-white/10">
+      <div class="flex items-center gap-3 px-4 py-3">
+        <div class="w-10 h-10 rounded-full bg-brand-yellow text-brand-black flex items-center justify-center font-black">
+          {{ user.username[0] | upper }}
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="font-bold text-sm truncate">{{ user.full_name or user.username }}</div>
+          <div class="text-xs text-white/50">{{ user.role }}</div>
+        </div>
+      </div>
+      <a href="/admin/logout"
+         class="flex items-center justify-center gap-2 mt-2 px-4 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition-all text-sm">
+        🚪 تسجيل الخروج
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-y-auto">
+
+    <!-- Top Bar (Mobile) -->
+    <div class="md:hidden bg-brand-black text-white p-4 flex items-center justify-between">
+      <span class="font-black">دجاج وتوم</span>
+      <div class="flex items-center gap-2">
+        <a href="/admin/qr" class="text-sm bg-brand-yellow text-brand-black font-bold px-3 py-1 rounded-lg">🔳 QR</a>
+        <a href="/admin/logout" class="text-sm bg-white/10 px-3 py-1 rounded-lg">خروج</a>
+      </div>
+    </div>
+
+    <div class="p-6 md:p-10">
+
+      <!-- الترحيب -->
+      <div class="mb-8">
+        <h1 class="text-3xl font-black text-brand-black">
+          أهلاً، {{ user.full_name or user.username }} 👋
+        </h1>
+        <p class="text-brand-grey mt-1">إليك نظرة سريعة على مطعمك</p>
+      </div>
+
+      <!-- الإحصائيات -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+        <div class="bg-white rounded-2xl p-6 border border-brand-border shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-3xl">📋</span>
+            <span class="text-xs font-bold text-brand-grey bg-brand-bg px-2 py-1 rounded-lg">المنيوهات</span>
+          </div>
+          <div class="text-4xl font-black text-brand-black">{{ total_menus }}</div>
+          <div class="text-sm text-brand-grey mt-1">منيو نشط</div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border border-brand-border shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-3xl">🍔</span>
+            <span class="text-xs font-bold text-brand-grey bg-brand-bg px-2 py-1 rounded-lg">العناصر</span>
+          </div>
+          <div class="text-4xl font-black text-brand-black">{{ total_items }}</div>
+          <div class="text-sm text-brand-grey mt-1">عنصر في كل المنيوهات</div>
+        </div>
+
+        <div class="bg-white rounded-2xl p-6 border border-brand-border shadow-sm">
+          <div class="flex items-center justify-between mb-3">
+            <span class="text-3xl">👥</span>
+            <span class="text-xs font-bold text-brand-grey bg-brand-bg px-2 py-1 rounded-lg">المستخدمون</span>
+          </div>
+          <div class="text-4xl font-black text-brand-black">{{ total_users }}</div>
+          <div class="text-sm text-brand-grey mt-1">حساب مُسجّل</div>
+        </div>
+      </div>
+
+      <!-- إجراءات سريعة -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+        <a href="/admin/menus/new"
+           class="bg-brand-red text-white rounded-2xl p-6 hover:bg-brand-darkRed transition-all
+                  shadow-lg shadow-brand-red/20 flex items-center justify-between group">
+          <div>
+            <div class="text-2xl font-black mb-1">+ منيو جديد</div>
+            <div class="text-sm text-white/80">أضف منيو موسمي أو خاص</div>
+          </div>
+          <span class="text-4xl group-hover:scale-110 transition-transform">📋</span>
+        </a>
+
+        <a href="/admin/menus"
+           class="bg-brand-yellow text-brand-black rounded-2xl p-6 hover:bg-amber-400 transition-all
+                  shadow-lg shadow-brand-yellow/20 flex items-center justify-between group">
+          <div>
+            <div class="text-2xl font-black mb-1">إدارة العناصر</div>
+            <div class="text-sm text-brand-black/70">أضف وعدّل الأصناف</div>
+          </div>
+          <span class="text-4xl group-hover:scale-110 transition-transform">🍔</span>
+        </a>
+
+        <a href="/admin/qr"
+           class="bg-brand-black text-white rounded-2xl p-6 hover:bg-brand-grey transition-all
+                  shadow-lg shadow-black/20 flex items-center justify-between group">
+          <div>
+            <div class="text-2xl font-black mb-1">رمز QR</div>
+            <div class="text-sm text-white/80">اطبع رمز الطاولات</div>
+          </div>
+          <span class="text-4xl group-hover:scale-110 transition-transform">🔳</span>
+        </a>
+      </div>
+
+      <!-- آخر المنيوهات -->
+      {% if menus %}
+      <div class="bg-white rounded-2xl border border-brand-border overflow-hidden">
+        <div class="p-5 border-b border-brand-border flex items-center justify-between">
+          <h2 class="font-black text-lg">آخر المنيوهات</h2>
+          <a href="/admin/menus" class="text-brand-red font-bold text-sm hover:underline">عرض الكل</a>
+        </div>
+        <div class="divide-y divide-brand-border">
+          {% for menu in menus %}
+            <div class="p-5 flex items-center justify-between hover:bg-brand-bg transition-all">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-brand-red/10 text-brand-red flex items-center justify-center font-bold">
+                  {{ loop.index }}
+                </div>
+                <div>
+                  <div class="font-bold text-brand-black">{{ menu.name }}</div>
+                  <div class="text-xs text-brand-grey">{{ menu.description or 'بدون وصف' }}</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                {% if menu.is_default %}
+                  <span class="text-xs bg-brand-yellow/20 text-amber-700 px-2 py-1 rounded-lg font-bold">افتراضي</span>
+                {% endif %}
+                {% if menu.is_active %}
+                  <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-lg font-bold">نشط</span>
+                {% endif %}
+                <a href="/admin/menus/{{ menu.id }}/items"
+                   class="text-brand-red font-bold text-sm hover:underline">عناصر →</a>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% else %}
+      <div class="bg-white rounded-2xl border-2 border-dashed border-brand-border p-12 text-center">
+        <div class="text-5xl mb-4">📋</div>
+        <h3 class="font-black text-xl mb-2">لا يوجد منيوهات بعد</h3>
+        <p class="text-brand-grey mb-6">ابدأ بإنشاء أول منيو لمطعمك</p>
+        <a href="/admin/menus/new" class="inline-block bg-brand-red text-white font-bold px-6 py-3 rounded-xl hover:bg-brand-darkRed transition-all">
+          + إنشاء منيو
+        </a>
+      </div>
+      {% endif %}
+
+    </div>
+  </main>
+</div>
+{% endblock %}

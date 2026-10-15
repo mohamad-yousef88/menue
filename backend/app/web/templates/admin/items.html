@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}عناصر {{ menu.name }} | دجاج وتوم{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-brand-bg">
+
+  <div class="bg-white border-b border-brand-border">
+    <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between flex-wrap gap-3">
+      <div class="flex items-center gap-3">
+        <a href="/admin/menus" class="text-brand-grey hover:text-brand-red">← رجوع</a>
+        <div>
+          <h1 class="text-xl font-black text-brand-black">{{ menu.name }}</h1>
+          <p class="text-xs text-brand-grey">{{ items | length }} عنصر</p>
+        </div>
+      </div>
+      <a href="/admin/menus/{{ menu.id }}/items/new"
+         class="bg-brand-red text-white font-bold px-5 py-2.5 rounded-xl hover:bg-brand-darkRed transition-all shadow-lg shadow-brand-red/20">
+        + إضافة عنصر
+      </a>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto p-6">
+
+    {% if items %}
+      <div class="bg-white rounded-2xl border border-brand-border overflow-hidden">
+        <table class="w-full">
+          <thead class="bg-brand-bg border-b border-brand-border">
+            <tr>
+              <th class="text-right p-4 font-black text-sm text-brand-black">العنصر</th>
+              <th class="text-right p-4 font-black text-sm text-brand-black">الفئة</th>
+              <th class="text-right p-4 font-black text-sm text-brand-black">السعر</th>
+              <th class="text-right p-4 font-black text-sm text-brand-black">الحالة</th>
+              <th class="text-left p-4 font-black text-sm text-brand-black">إجراءات</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-brand-border">
+            {% for item in items %}
+              <tr class="hover:bg-brand-bg transition-all">
+                <td class="p-4">
+                  <div class="flex items-center gap-3">
+                    {% if item.image_url %}
+                      <img src="{{ item.image_url }}" class="w-12 h-12 rounded-xl object-cover">
+                    {% else %}
+                      <div class="w-12 h-12 rounded-xl bg-brand-bg flex items-center justify-center text-xl">🍔</div>
+                    {% endif %}
+                    <div>
+                      <div class="font-bold text-brand-black flex items-center gap-2">
+                        {{ item.name }}
+                        {% if item.is_featured %}<span class="text-brand-yellow">★</span>{% endif %}
+                      </div>
+                      <div class="text-xs text-brand-grey line-clamp-1">{{ item.description or '' }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td class="p-4">
+                  <span class="text-xs bg-brand-red/10 text-brand-red font-bold px-2.5 py-1 rounded-lg">
+                    {{ item.category }}
+                  </span>
+                </td>
+                <td class="p-4 font-black text-brand-red">
+                  {{ '{:,}'.format(item.price) }} <span class="text-xs">ل.س</span>
+                </td>
+                <td class="p-4">
+                  {% if item.is_available %}
+                    <span class="text-xs bg-green-100 text-green-700 font-bold px-2 py-1 rounded-lg">متوفر</span>
+                  {% else %}
+                    <span class="text-xs bg-red-100 text-red-700 font-bold px-2 py-1 rounded-lg">غير متوفر</span>
+                  {% endif %}
+                </td>
+                <td class="p-4 text-left">
+                  <div class="inline-flex gap-1">
+                    <a href="/admin/menus/{{ menu.id }}/items/{{ item.id }}/edit"
+                       class="p-2 hover:bg-brand-yellow/20 rounded-lg transition-all">✏️</a>
+                    <form method="POST"
+                          action="/admin/menus/{{ menu.id }}/items/{{ item.id }}/delete"
+                          onsubmit="return confirm('حذف العنصر؟')" class="contents">
+                      <button type="submit" class="p-2 hover:bg-red-100 rounded-lg transition-all">🗑️</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="bg-white rounded-2xl border-2 border-dashed border-brand-border p-16 text-center">
+        <div class="text-6xl mb-4">🍔</div>
+        <h3 class="font-black text-xl mb-2">لا يوجد عناصر</h3>
+        <p class="text-brand-grey mb-6">أضف أول عنصر لهذا المنيو</p>
+        <a href="/admin/menus/{{ menu.id }}/items/new"
+           class="inline-block bg-brand-red text-white font-bold px-6 py-3 rounded-xl hover:bg-brand-darkRed transition-all">
+          + إضافة عنصر
+        </a>
+      </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
