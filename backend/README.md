@@ -766,4 +766,3 @@ For questions or issues:
 
 ---
 
-**Built with  Fast Food.**
