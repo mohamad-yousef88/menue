@@ -766,4 +766,4 @@ For questions or issues:
 
 ---
 
-**Built with ❤️ for Djaj Wa Toom — Fast Food.**
+**Built with  Fast Food.**
